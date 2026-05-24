@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from typing import Dict, List, Tuple, Callable, Any, Optional
 
-# ------------------------------------------------------------
+
 # Base de conocimiento (hechos y reglas)
-# ------------------------------------------------------------
+
 class Hecho:
     def __init__(self, predicado: str, *args):
         self.predicado = predicado
@@ -39,9 +39,9 @@ class BaseConocimiento:
                     contexto.update(resultado)
         return contexto
 
-# ------------------------------------------------------------
-# Sistema de transporte (Bogotá)
-# ------------------------------------------------------------
+
+# Sistema de transporte - Bogotá
+
 class SistemaTransmilenio:
     def __init__(self, base_conocimiento: BaseConocimiento):
         self.bc = base_conocimiento
@@ -100,9 +100,9 @@ class SistemaTransmilenio:
                     heapq.heappush(pq, (nuevo_costo, vecino, tipo_vec, linea_vec, estacion))
         return [], float('inf')
 
-# ------------------------------------------------------------
+
 # Reglas específicas (Bogotá)
-# ------------------------------------------------------------
+
 def regla_transbordo(contexto):
     tipo_act, tipo_ant = contexto.get("tipo"), contexto.get("tipo_anterior")
     linea_act, linea_ant = contexto.get("linea"), contexto.get("linea_anterior")
@@ -125,9 +125,9 @@ def regla_espera_alimentador(contexto):
         contexto["costo_extra"] += 3
     return {"costo_extra": contexto["costo_extra"]}
 
-# ------------------------------------------------------------
+
 # Construcción de la red de Bogotá
-# ------------------------------------------------------------
+
 def construir_red_bogota():
     bc = BaseConocimiento()
     bc.agregar_regla(Regla("Transbordo", [lambda ctx: True], regla_transbordo))
@@ -168,9 +168,9 @@ def construir_red_bogota():
     sistema.agregar_conexion("Tunal", "Ciudad Bolívar", "SITP Z2", 12, "zonal")
     return sistema
 
-# ------------------------------------------------------------
+
 # Visualización gráfica de la ruta
-# ------------------------------------------------------------
+
 def visualizar_ruta(sistema: SistemaTransmilenio, ruta: List[str], titulo: str):
     """Dibuja el grafo de estaciones y resalta la ruta encontrada."""
     G = nx.Graph()
@@ -201,9 +201,9 @@ def visualizar_ruta(sistema: SistemaTransmilenio, ruta: List[str], titulo: str):
     plt.tight_layout()
     plt.show()
 
-# ------------------------------------------------------------
+
 # Función de consulta con visualización
-# ------------------------------------------------------------
+
 def consultar_y_visualizar(sistema: SistemaTransmilenio, origen: str, destino: str, hora_punta: bool = False):
     print(f"\n🔍 Consulta: {origen} → {destino}" + (" (Hora punta activa)" if hora_punta else ""))
     sistema.hora_punta_global = hora_punta
@@ -216,9 +216,9 @@ def consultar_y_visualizar(sistema: SistemaTransmilenio, origen: str, destino: s
         print("❌ No hay ruta disponible")
     return ruta, tiempo
 
-# ------------------------------------------------------------
+
 # Ejecución principal con ejemplos
-# ------------------------------------------------------------
+
 if __name__ == "__main__":
     sistema = construir_red_bogota()
     
