@@ -85,9 +85,11 @@ class SistemaTransmilenio:
 
     def mejor_ruta(self, origen: str, destino: str) -> Tuple[List[str], float]:
         # Estado: (estacion, tipo_servicio, linea)
-        dist = {(origen, None, None): 0}
+        dist: Dict[Tuple[str, Optional[str], Optional[str]], float] = {(origen, None, None): 0.0}
         prev = {}
-        pq = [(0, origen, None, None, None)]  # (costo, estacion, tipo, linea, prev_estacion)
+        pq: List[tuple[float, str, Optional[str], Optional[str], Optional[str]]] = [
+            (0.0, origen, None, None, None)
+        ]  # (costo, estacion, tipo, linea, prev_estacion)
 
         while pq:
             costo_act, estacion, tipo_act, linea_act, _ = heapq.heappop(pq)
