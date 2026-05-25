@@ -70,7 +70,7 @@ class SistemaTransmilenio:
         self.bc.aplicar_reglas(contexto)
         return contexto["tiempo_base"] + contexto["costo_extra"]
 
-# 3 Algoritmo de búsqueda de la mejor ruta--------------------------------------------------
+# 3 Búsqueda de la mejor ruta--------------------------------------------------
 
     def mejor_ruta(self, origen: str, destino: str) -> Tuple[List[str], float]:
         dist = {(origen, None, None): 0.0}
@@ -171,12 +171,13 @@ def construir_red_bogota():
 def visualizar_ruta(sistema: SistemaTransmilenio, ruta: List[str], titulo: str):
     """Dibuja el grafo de estaciones y resalta la ruta encontrada."""
     G = nx.Graph()
+
     # Agregar todas las conexiones del grafo
     for estacion, vecinos in sistema.grafo.items():
         for vecino, _, _, _ in vecinos:
             G.add_edge(estacion, vecino)
     
-    pos = nx.spring_layout(G, k=0.5, seed=42)  # layout para visualización
+    pos = nx.spring_layout(G, k=0.5, seed=42)  # Para la visualización
     plt.figure(figsize=(14, 10))
     
     # Dibujar todos los nodos y aristas
@@ -218,7 +219,7 @@ if __name__ == "__main__":
     sistema = construir_red_bogota()
     
 # 9 Probar ruta----------------------------------------------------------------------------
-    consultar_y_visualizar(sistema, "La Estancia", "Patio Bonito", hora_punta=False)
+    consultar_y_visualizar(sistema, "Portal Norte", "Tunal", hora_punta=False)
 """
 Lista completa de estaciones (Selecciona un punto A y un punto B):
 1. Portal Norte
