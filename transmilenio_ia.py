@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from typing import Dict, List, Tuple, Callable, Any, Optional
 
-# Base de conocimiento, hechos y reglas---------------------------------------------
+# 1 Base de conocimiento, hechos y reglas---------------------------------------------
 
 class Hecho:
     def __init__(self, predicado: str, *args):
@@ -38,7 +38,7 @@ class BaseConocimiento:
                     contexto.update(resultado)
         return contexto
 
-# Sistema de transporte - Bogotá--------------------------------------------------
+# 2 Sistema de transporte - Bogotá--------------------------------------------------
 
 class SistemaTransmilenio:
     def __init__(self, base_conocimiento: BaseConocimiento):
@@ -70,6 +70,8 @@ class SistemaTransmilenio:
         self.bc.aplicar_reglas(contexto)
         return contexto["tiempo_base"] + contexto["costo_extra"]
 
+# 3 Algoritmo de búsqueda de la mejor ruta--------------------------------------------------
+
     def mejor_ruta(self, origen: str, destino: str) -> Tuple[List[str], float]:
         dist = {(origen, None, None): 0.0}
         prev = {}
@@ -98,7 +100,7 @@ class SistemaTransmilenio:
                     heapq.heappush(pq, (nuevo_costo, vecino, tipo_vec, linea_vec, estacion))
         return [], float('inf')
 
-# Reglas específicas (Bogotá)-----------------------------------------------------
+# 4 Reglas específicas (Bogotá)-----------------------------------------------------
 
 def regla_transbordo(contexto):
     tipo_act, tipo_ant = contexto.get("tipo"), contexto.get("tipo_anterior")
@@ -122,7 +124,7 @@ def regla_espera_alimentador(contexto):
         contexto["costo_extra"] += 3
     return {"costo_extra": contexto["costo_extra"]}
 
-# Construcción de la red de Bogotá-------------------------------------------------
+# 5 Construcción de la red de Bogotá-------------------------------------------------
 
 def construir_red_bogota():
     bc = BaseConocimiento()
@@ -164,7 +166,7 @@ def construir_red_bogota():
     sistema.agregar_conexion("Tunal", "Ciudad Bolívar", "SITP Z2", 12, "zonal")
     return sistema
 
-# Visualización gráfica de la ruta--------------------------------------------------
+# 6 Visualización gráfica de la ruta--------------------------------------------------
 
 def visualizar_ruta(sistema: SistemaTransmilenio, ruta: List[str], titulo: str):
     """Dibuja el grafo de estaciones y resalta la ruta encontrada."""
@@ -196,7 +198,7 @@ def visualizar_ruta(sistema: SistemaTransmilenio, ruta: List[str], titulo: str):
     plt.tight_layout()
     plt.show()
 
-# Función de consulta con visualización-------------------------------------------------
+# 7 Función de consulta con visualización-------------------------------------------------
 
 def consultar_y_visualizar(sistema: SistemaTransmilenio, origen: str, destino: str, hora_punta: bool = False):
     print(f"\n🔍 Consulta: {origen} → {destino}" + (" (Hora punta activa)" if hora_punta else ""))
@@ -210,12 +212,12 @@ def consultar_y_visualizar(sistema: SistemaTransmilenio, origen: str, destino: s
         print("❌ No hay ruta disponible")
     return ruta, tiempo
 
-# Ejecución principal con ejemplos-------------------------------------------------------
+# 8 Ejecución principal con ejemplos-------------------------------------------------------
 
 if __name__ == "__main__":
     sistema = construir_red_bogota()
     
-# Probar ruta----------------------------------------------------------------------------
+# 9 Probar ruta----------------------------------------------------------------------------
     consultar_y_visualizar(sistema, "La Estancia", "Patio Bonito", hora_punta=False)
 """
 Lista completa de estaciones (Selecciona un punto A y un punto B):
