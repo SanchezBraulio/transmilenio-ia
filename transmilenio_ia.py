@@ -3,8 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 from typing import Dict, List, Tuple, Callable, Any, Optional
 
-
-# Base de conocimiento (hechos y reglas)
+# Base de conocimiento, hechos y reglas---------------------------------------------
 
 class Hecho:
     def __init__(self, predicado: str, *args):
@@ -39,8 +38,7 @@ class BaseConocimiento:
                     contexto.update(resultado)
         return contexto
 
-
-# Sistema de transporte - Bogotá
+# Sistema de transporte - Bogotá--------------------------------------------------
 
 class SistemaTransmilenio:
     def __init__(self, base_conocimiento: BaseConocimiento):
@@ -100,8 +98,7 @@ class SistemaTransmilenio:
                     heapq.heappush(pq, (nuevo_costo, vecino, tipo_vec, linea_vec, estacion))
         return [], float('inf')
 
-
-# Reglas específicas (Bogotá)
+# Reglas específicas (Bogotá)-----------------------------------------------------
 
 def regla_transbordo(contexto):
     tipo_act, tipo_ant = contexto.get("tipo"), contexto.get("tipo_anterior")
@@ -125,8 +122,7 @@ def regla_espera_alimentador(contexto):
         contexto["costo_extra"] += 3
     return {"costo_extra": contexto["costo_extra"]}
 
-
-# Construcción de la red de Bogotá
+# Construcción de la red de Bogotá-------------------------------------------------
 
 def construir_red_bogota():
     bc = BaseConocimiento()
@@ -135,7 +131,7 @@ def construir_red_bogota():
     bc.agregar_regla(Regla("EsperaAlimentador", [lambda ctx: True], regla_espera_alimentador))
     sistema = SistemaTransmilenio(bc)
 
-    # Línea A
+    # Línea A -----------------------
     sistema.agregar_conexion("Portal Norte", "Calle 142", "A", 4)
     sistema.agregar_conexion("Calle 142", "Calle 106", "A", 3)
     sistema.agregar_conexion("Calle 106", "Calle 72", "A", 4)
@@ -147,29 +143,28 @@ def construir_red_bogota():
     sistema.agregar_conexion("Calle 19", "Avenida Jiménez", "A", 2)
     sistema.agregar_conexion("Avenida Jiménez", "Museo Nacional", "A", 2)
     sistema.agregar_conexion("Museo Nacional", "Tunal", "A", 10)
-    # Línea B
+    # Línea B -----------------------
     sistema.agregar_conexion("Portal Suba", "Suba Calle 100", "B", 5)
     sistema.agregar_conexion("Suba Calle 100", "Suba Calle 72", "B", 4)
     sistema.agregar_conexion("Suba Calle 72", "Rionegro", "B", 3)
     sistema.agregar_conexion("Rionegro", "Avenida El Dorado", "B", 4)
     sistema.agregar_conexion("Avenida El Dorado", "Avenida Jiménez", "B", 3)
-    # Línea C
+    # Línea C -----------------------
     sistema.agregar_conexion("Portal Américas", "Banderas", "C", 5)
     sistema.agregar_conexion("Banderas", "Granja", "C", 4)
     sistema.agregar_conexion("Granja", "Avenida Jiménez", "C", 6)
-    # Alimentadores
+    # Alimentadores -----------------
     sistema.agregar_conexion("Portal Norte", "La Estancia", "Alimentador N1", 8, "alimentador")
     sistema.agregar_conexion("La Estancia", "San José Norte", "Alimentador N1", 5, "alimentador")
     sistema.agregar_conexion("Portal Suba", "Suba Compartir", "Alimentador S1", 7, "alimentador")
     sistema.agregar_conexion("Portal Américas", "Patio Bonito", "Alimentador A1", 6, "alimentador")
-    # Zonales SITP
+    # Zonales SITP ------------------
     sistema.agregar_conexion("Avenida Jiménez", "Centro", "SITP Z1", 3, "zonal")
     sistema.agregar_conexion("Centro", "La Macarena", "SITP Z1", 4, "zonal")
     sistema.agregar_conexion("Tunal", "Ciudad Bolívar", "SITP Z2", 12, "zonal")
     return sistema
 
-
-# Visualización gráfica de la ruta
+# Visualización gráfica de la ruta--------------------------------------------------
 
 def visualizar_ruta(sistema: SistemaTransmilenio, ruta: List[str], titulo: str):
     """Dibuja el grafo de estaciones y resalta la ruta encontrada."""
@@ -201,8 +196,7 @@ def visualizar_ruta(sistema: SistemaTransmilenio, ruta: List[str], titulo: str):
     plt.tight_layout()
     plt.show()
 
-
-# Función de consulta con visualización
+# Función de consulta con visualización-------------------------------------------------
 
 def consultar_y_visualizar(sistema: SistemaTransmilenio, origen: str, destino: str, hora_punta: bool = False):
     print(f"\n🔍 Consulta: {origen} → {destino}" + (" (Hora punta activa)" if hora_punta else ""))
@@ -216,19 +210,40 @@ def consultar_y_visualizar(sistema: SistemaTransmilenio, origen: str, destino: s
         print("❌ No hay ruta disponible")
     return ruta, tiempo
 
-
-# Ejecución principal con ejemplos
+# Ejecución principal con ejemplos-------------------------------------------------------
 
 if __name__ == "__main__":
     sistema = construir_red_bogota()
     
-    # Prueba 1: misma línea
-    consultar_y_visualizar(sistema, "Portal Norte", "Universidad Nacional", hora_punta=False)
-    # Prueba 2: transbordo
-    consultar_y_visualizar(sistema, "Portal Suba", "Calle 26", hora_punta=False)
-    # Prueba 3: alimentador
-    consultar_y_visualizar(sistema, "La Estancia", "Avenida Jiménez", hora_punta=False)
-    # Prueba 4: hora punta
-    consultar_y_visualizar(sistema, "Portal Norte", "Universidad Nacional", hora_punta=True)
-    # Prueba 5: combinada
-    consultar_y_visualizar(sistema, "San José Norte", "Centro", hora_punta=False)
+# Probar ruta----------------------------------------------------------------------------
+    consultar_y_visualizar(sistema, "La Estancia", "Patio Bonito", hora_punta=False)
+"""
+Lista completa de estaciones (Selecciona un punto A y un punto B):
+1. Portal Norte
+2. Calle 142
+3. Calle 106
+4. Calle 72
+5. Calle 45
+6. Calle 26
+7. Tercer Milenio
+8. Universidad Nacional
+9. Calle 19
+10. Avenida Jiménez
+11. Museo Nacional
+12. Tunal
+13. Portal Suba
+14. Suba Calle 100
+15. Suba Calle 72
+16. Rionegro
+17. Avenida El Dorado
+18. Portal Américas
+19. Banderas
+20. Granja
+21. La Estancia
+22. San José Norte
+23. Suba Compartir
+24. Patio Bonito
+25. Centro
+26. La Macarena
+27. Ciudad Bolívar
+"""
